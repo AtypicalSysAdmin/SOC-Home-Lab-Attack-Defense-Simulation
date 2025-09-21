@@ -243,7 +243,7 @@ Enable Kali Enhanced session for Hyper-V
 
 Terminal: 
 
-```bash kali-teaks ``` > virtualization > configure hyper-v enhanced session > logout
+```kali-teaks ``` > virtualization > configure hyper-v enhanced session > logout
 
 Host: 
 
