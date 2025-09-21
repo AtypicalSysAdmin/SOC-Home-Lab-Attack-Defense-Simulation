@@ -307,52 +307,10 @@ DQL:
  data.win.system.eventID:4624
 ```
 
-Add Discord channel alerts:
-
-```bash
- sudo nano /var/ossec/active-response/bin/discord_notify.sh
-
-  #!/bin/bash
-   
-  # Read alert input from Wazuh
-  read alert
-   
-  # Extract details (basic example — you can make this more detailed)
-  username=$(echo "$alert" | grep -oP '"targetUserName":"\K[^"]+')
-  srcip=$(echo "$alert" | grep -oP '"ipAddress":"\K[^"]+')
-  ruleid=$(echo "$alert" | grep -oP '"rule":{"id":"\K[0-9]+')
-  
- # Fallbacks
- username=${username:-"Unknown"}
- srcip=${srcip:-"Unknown"}
- ruleid=${ruleid:-"Unknown"}
-  
- # Discord webhook
- WEBHOOK_URL="https://discord.com/api/webhooks/xxxxxxxxx/yyyyyyyyyyyyyy"
-  
- # Compose message
- json_payload=$(cat <<EOF
- {
-   "content": "🚨 **Wazuh Alert** 🚨\n**Rule ID:** $ruleid\n**User:** $username\n**Source IP:** $srcip"
- }
- EOF
- )
-  
- # Send to Discord
- curl -X POST -H "Content-Type: application/json" -d "$json_payload" "$WEBHOOK_URL"
-```
-modify permissions:
-
-```bash
-	chmod 750 /var/ossec/active-response/bin/discord_notify.sh
-	chown root:wazuh /var/ossec/active-response/bin/discord_notify.sh
-```
-
 Wazuh ui > Management > Administration > Rules
 
 •	18107 → Windows failed login (Event ID 4625)
 •	1002 → Linux authentication failed
- 
 
 # Add a notification to the Discord channel:
 
@@ -402,6 +360,12 @@ Paste the following:
   
  # Send to Discord
  curl -X POST -H "Content-Type: application/json" -d "$json_payload" "$WEBHOOK_URL"
+```
+modify permissions:
+
+```bash
+	chmod 750 /var/ossec/active-response/bin/discord_notify.sh
+	chown root:wazuh /var/ossec/active-response/bin/discord_notify.sh
 ```
 
 Register the Script in ossec.conf
