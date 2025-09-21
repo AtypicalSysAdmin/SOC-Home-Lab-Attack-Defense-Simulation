@@ -1,4 +1,3 @@
-# SOC-Home-Lab-Attack-Defense-Simulation
 # 🛡️ Homelab SOC Project: Proxmox + Windows Server + Wazuh + Discord Alerts
 
 This project sets up a fully functional **Security Operations Center (SOC) lab** using:
@@ -190,15 +189,15 @@ curl -X POST -H "Content-Type: application/json" -d "$json_payload" "$WEBHOOK_UR
 ```
 📸 Screenshot Placeholder: Discord Alert Message
 
-🚀 Future Plans
+🚀 Extra
 
- Add response playbook to block IPs
+ - Add response playbook to block IPs
 
- Create email or SMS fallback alerts
+ - Create email or SMS fallback alerts
 
- Deploy Graylog for log retention
+ - Deploy Graylog for log retention
 
- Setup SIEM rules for phishing detection
+ - Set up SIEM rules for phishing detection
 
 🧾 Credits
 
