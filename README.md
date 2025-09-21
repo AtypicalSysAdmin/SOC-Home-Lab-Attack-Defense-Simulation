@@ -231,7 +231,7 @@ https://10.0.0.80
 Login with default:
 
 •	Username: admin
-•	Password: admin
+•	Password: read Wazuh documentation
 
 # Kali
 
