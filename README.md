@@ -1,10 +1,10 @@
-#Home lab SOC Simulation Proxmox + Windows server + Kali + Wazuh + Discord channel notifciations
+# Home lab SOC Simulation Proxmox + Windows server + Kali + Wazuh + Discord channel notifciations
 
-#Proxomx
+# Proxomx
 
 Download Proxmox 8 iOS, use Rufus to burn it to usb, and install it on a machine.
 
-#Increase Proxmox Storage:
+# Increase Proxmox Storage:
 
 Datacenter > Storage > Remove LVM-Thin
 
@@ -18,7 +18,7 @@ Click on node (pve) > shell
 
 Datacenter > storage > select root > edit > content > add all
 
-#Change enterprise license for Proxmox updates:
+# Change enterprise license for Proxmox updates:
 
 ```bash
 1. nano /etc/apt/sources.list.d/pve-enterprise.list
@@ -50,13 +50,13 @@ Ctrl + x & ctrl + o save and close, then run updates
 
 Configuring No Subscription Repository in Proxmoxm VE 8.x Part - 6
 
-#Windows Server 2025
+# Windows Server 2025
 
 Download Windows Server 2025 iso: Windows Server 2025 | Microsoft Evaluation Center
 
 Create a Windows Server VM on Proxmox or Hyper-V (8GB RAM, 64GB Storage for Desktop experience)
 
-#Update Windows
+# Update Windows
 
 ```bash
  1. $session=new-pssession 10.0.0.2 -Credential (Get-Credential)
@@ -93,7 +93,7 @@ wait for a restart or
 
 Rename the server to DC01
 
-#Promote to Domain Controller
+# Promote to Domain Controller
 
 Manage > Add roles and features > Active Directory and Domain Services
  
@@ -107,7 +107,7 @@ Assign a static IPv4 address to the DC01 network adapter and disable IPv6
  
 Click on Next until the end of the wizard > finish 
 
-#Enable Advanced Feature in Active Directory Users
+# Enable Advanced Feature in Active Directory Users
 
 Use this script to create fake users:
 
@@ -198,7 +198,7 @@ Right-click Default Domain Policy → Click Edit
            Account Lockout policy
  
 
-#Join a client computer to the domain:
+# Join a client computer to the domain:
 
 Set the DNS to be the DC01 IP address (i.e. 10.0.0.2) > join the domain Homelab
  
@@ -212,7 +212,7 @@ Verify the applied group policy
 1. gpresult /r
 ```
 
-#Wazuh:
+# Wazuh:
 
 Download Ubuntu 22 LTS ISO
 
@@ -233,7 +233,7 @@ Login with default:
 •	Username: admin
 •	Password: admin
 
-#Kali
+# Kali
 
 Download Kali iso
 
@@ -254,7 +254,7 @@ Host:
 
 Installing Hyper-V Enhanced Session Mode (Guest Tools) | Kali Linux Documentation
 
-#Phase 1: Brute force John.Doe on DC01
+# Phase 1: Brute force John.Doe on DC01
 
 ```bash
 1. sudo apt update
@@ -276,7 +276,7 @@ Installing Hyper-V Enhanced Session Mode (Guest Tools) | Kali Linux Documentatio
 •	-P = wordlist (does NOT contain the real password)
 ```
  
-#Confirm detection: Go to your Wazuh dashboard → Security Events
+# Confirm detection: Go to your Wazuh dashboard → Security Events
 
 •	Event ID: 4625
 •	Username: john.doe
@@ -354,7 +354,7 @@ Wazuh ui > Management > Administration > Rules
 •	1002 → Linux authentication failed
  
 
-#Add a notification to the Discord channel:
+# Add a notification to the Discord channel:
 
 Create a Discord Webhook
 
