@@ -1,8 +1,8 @@
-# Home lab SOC Simulation Proxmox + Windows server + Kali + Wazuh + Discord channel notifciations
+### Home lab SOC Simulation Proxmox + Windows server + Kali + Wazuh + Discord channel notifciations
 
 # Proxomx
 
-Download Proxmox 8 iOS, use Rufus to burn it to usb, and install it on a machine.
+Download Proxmox 8 iOS, use Rufus to burn it to a USB, and install it on a machine.
 
 # Increase Proxmox Storage:
 
@@ -30,7 +30,7 @@ Comment out the existing line and add
 deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
 ```
 
-Edit Ceph (required for proxmox 8+)
+Edit Ceph (required for Proxmox 8+)
 
 ```bash
 nano /etc/apt/sources.list.d/ceph.list
@@ -48,7 +48,7 @@ Ctrl + x & ctrl + o save and close, then run updates
 apt-get update -y && apt-get upgrade -y
 ```
 
-Configuring No Subscription Repository in Proxmoxm VE 8.x Part - 6
+Configuring No Subscription Repository in Proxmox VE 8.x Part - 6
 
 # Windows Server 2025
 
@@ -56,7 +56,7 @@ Download Windows Server 2025 iso: Windows Server 2025 | Microsoft Evaluation Cen
 
 Create a Windows Server VM on Proxmox or Hyper-V (8GB RAM, 64GB Storage for Desktop experience)
 
-# Update Windows
+# Update Windows using the task scheduler or manually
 
 ```bash
   $session=new-pssession 10.0.0.2 -Credential (Get-Credential)
@@ -214,7 +214,7 @@ gpresult /r
 
 # Wazuh:
 
-Download Ubuntu 22 LTS ISO
+Download Ubuntu 22 LTS ISO and boot up a VM, then run the following to install Wazuh
 
 ```bash
 sudo apt update && sudo apt upgrade -y
