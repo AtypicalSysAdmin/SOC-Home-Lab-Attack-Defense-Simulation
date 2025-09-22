@@ -1,10 +1,10 @@
-### Home lab SOC Simulation Proxmox + Windows server + Kali + Wazuh + Discord channel notifciations
+# Home lab SOC Simulation Proxmox + Windows server + Kali + Wazuh + Discord channel notifciations
 
-# Proxomx
+## Proxomx
 
 Download Proxmox 8 iOS, use Rufus to burn it to a USB, and install it on a machine.
 
-# Increase Proxmox Storage:
+### Increase Proxmox Storage:
 
 Datacenter > Storage > Remove LVM-Thin
 
@@ -18,7 +18,7 @@ resize2fs /dev/pve/root
 
 Datacenter > storage > select root > edit > content > add all
 
-# Change enterprise license for Proxmox updates:
+### Change enterprise license for Proxmox updates:
 
 ```bash
 nano /etc/apt/sources.list.d/pve-enterprise.list
@@ -50,13 +50,13 @@ apt-get update -y && apt-get upgrade -y
 
 Configuring No Subscription Repository in Proxmox VE 8.x Part - 6
 
-# Windows Server 2025
+## Windows Server 2025
 
 Download Windows Server 2025 iso: Windows Server 2025 | Microsoft Evaluation Center
 
 Create a Windows Server VM on Proxmox or Hyper-V (8GB RAM, 64GB Storage for Desktop experience)
 
-# Update Windows using the task scheduler or manually
+### Update Windows using the task scheduler or manually
 
 ```bash
   $session=new-pssession 10.0.0.2 -Credential (Get-Credential)
@@ -93,7 +93,7 @@ wait for a restart or
 
 Rename the server to DC01
 
-# Promote to Domain Controller
+### Promote to Domain Controller
 
 Manage > Add roles and features > Active Directory and Domain Services
  
@@ -107,7 +107,7 @@ Assign a static IPv4 address to the DC01 network adapter and disable IPv6
  
 Click on Next until the end of the wizard > finish 
 
-# Enable Advanced Feature in Active Directory Users
+### Enable Advanced Feature in Active Directory Users
 
 Use this script to create fake users:
 
@@ -175,7 +175,7 @@ Use this script to create fake users:
   #the end
 ```
 
-Edit group policy
+### Edit group policy
 
 Run ```bash gpmc.msc``` from the Run or PowerShell
 
@@ -198,7 +198,7 @@ Right-click Default Domain Policy → Click Edit
            Account Lockout policy
  
 
-# Join a client computer to the domain:
+### Join a client computer to the domain:
 
 Set the DNS to be the DC01 IP address (i.e. 10.0.0.2) > join the domain Homelab
  
@@ -212,7 +212,7 @@ Verify the applied group policy
 gpresult /r
 ```
 
-# Wazuh:
+## Wazuh:
 
 Download Ubuntu 22 LTS ISO and boot up a VM, then run the following to install Wazuh
 
@@ -323,7 +323,7 @@ Create a Discord Webhook
 
 Keep this URL safe.
 
-Create the Wazuh Discord Notification Script
+## Create the Wazuh Discord Notification Script
 
 ```bash
  sudo nano /var/ossec/active-response/bin/discord_notify.sh
@@ -361,7 +361,7 @@ Paste the following:
  # Send to Discord
  curl -X POST -H "Content-Type: application/json" -d "$json_payload" "$WEBHOOK_URL"
 ```
-modify permissions:
+Modify script permissions:
 
 ```bash
 	chmod 750 /var/ossec/active-response/bin/discord_notify.sh
@@ -401,4 +401,4 @@ Restart Wazuh Manager
  sudo systemctl restart wazuh-manager
 ```
 
-Test by running the brute force step again 
+### Test by running the brute force step again 
