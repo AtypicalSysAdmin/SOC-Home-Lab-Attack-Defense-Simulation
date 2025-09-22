@@ -230,8 +230,8 @@ https://10.0.0.80
 
 Login with default:
 
-•	Username: admin
-•	Password: read Wazuh documentation
+- Username: admin
+- Password: read Wazuh documentation
 
 # Kali
 
@@ -273,15 +273,15 @@ echo -e '123456\npassword\nqwerty\nwelcome\nPassw0rd\nadmin123\nletmein\n1234567
 hydra -t 1 -V -l john.doe -P mini-rdp.txt rdp://10.0.0.2
 ```
 
-•	-t 1 = 1 thread to avoid lockout burst
-•	-V = verbose (see each attempt)
-•	-P = wordlist (does NOT contain the real password)
+- -t 1 = 1 thread to avoid lockout burst
+- -V = verbose (see each attempt)
+- -P = wordlist (does NOT contain the real password)
  
 # Confirm detection: Go to your Wazuh dashboard → Security Events
 
-•	Event ID: 4625
-•	Username: john.doe
-•	Source IP: <Kali IP>
+- Event ID: 4625
+- Username: john.doe
+- Source IP: <Kali IP>
 
 Search for Failed Logins (Event ID 4625)
 
@@ -309,17 +309,17 @@ DQL:
 
 Wazuh ui > Management > Administration > Rules
 
-•	18107 → Windows failed login (Event ID 4625)
-•	1002 → Linux authentication failed
+- 18107 → Windows failed login (Event ID 4625)
+- 1002 → Linux authentication failed
 
 # Add a notification to the Discord channel:
 
 Create a Discord Webhook
 
-1.	Go to your Discord server settings.
-2.	Select the channel you want alerts in.
-3.	Click the ⚙️ settings icon → go to Integrations → Webhooks.
-4.	Click "New Webhook", name it (e.g., "Wazuh Alerts"), and copy the Webhook URL (e.g., https://discord.com/api/webhooks/...).
+1. Go to your Discord server settings.
+2. Select the channel you want alerts in.
+3. Click the ⚙️ settings icon → go to Integrations → Webhooks.
+4. Click "New Webhook", name it (e.g., "Wazuh Alerts"), and copy the Webhook URL (e.g., https://discord.com/api/webhooks/...).
 
 Keep this URL safe.
 
