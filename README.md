@@ -56,60 +56,39 @@ Download Windows Server 2025 iso: Windows Server 2025 | Microsoft Evaluation Cen
 
 Create a Windows Server VM on Proxmox or Hyper-V (8GB RAM, 64GB Storage for Desktop experience)
 
-### Update Windows using the task scheduler or manually
+### Update Windows 
 
-```bash
-  $session=new-pssession 10.0.0.2 -Credential (Get-Credential)
-  copy-item -ToSession $session -Path "F:\IT-F\Security Operations Centre\Scripts" -Recurse -Destination C:\script
-  Invoke-Command -Session $session -ScriptBlock {
-   
-      $time = ([datetime]'2023-10-20 20:00:00')
-      $action = New-ScheduledTaskAction -Execute 'PowerShell.exe' -Argument '-ExecutionPolicy bypass -File C:\Script\Install-WindowsUpdate.ps1' 
-      $trigger = New-ScheduledTaskTrigger -Once -At $time 
-      $principal = New-ScheduledTaskPrincipal  -RunLevel Highest -UserID "NT AUTHORITY\SYSTEM" -LogonType S4U
-   
-     if (! (Get-ScheduledTask -TaskName "Install-WindowsUpdate" -ErrorAction SilentlyContinue))
-     {
-         Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "Install-WindowsUpdate"
-     }
-     else
-     {
-         Set-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskName "Install-WindowsUpdate"
-     }
-  
-     Get-ScheduledTaskInfo -TaskName Install-WindowsUpdate
- }
-  
- Invoke-Command -Session $session -ScriptBlock {
-  Start-ScheduledTask -TaskName Install-WindowsUpdate
- }
-  
- Invoke-Command -Session $session -ScriptBlock {
-  Get-ScheduledTaskInfo -TaskName Install-WindowsUpdate
- }
-```
-
-wait for a restart or
+Use the task scheduler to create an update task using a PowerShell script or manually search for updates and install them.
 
 Rename the server to DC01
+
+Restart
 
 ### Promote to Domain Controller
 
 Manage > Add roles and features > Active Directory and Domain Services
 
 ![Promote to DC-1](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/promote%20to%20DC-1.png)
- 
+
+![Promote to DC-2](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/promote%20to%20DC-2.png)
+
 Click on Promote > Add a new forest > root domain: homelab.local
 
 Set the DSRM password and store it somewhere important
 
-During Active Directory setup, a DNS delegation warning appeared, indicating that the authoritative parent zone for the domain homelab.local could not be found. Since this is a standalone lab environment using an internal .local domain, this warning is expected and was safely ignored.
+![DC Wizard](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/DC%20wizard.png)
 
-Assign a static IPv4 address to the DC01 network adapter and disable IPv6
+During Active Directory setup, a DNS delegation warning appeared, indicating that the authoritative parent zone for the domain homelab.local could not be found. Since this is a standalone lab environment using an internal .local domain, this warning is expected and was safely ignored.
  
 Click on Next until the end of the wizard > finish 
 
+Assign a static IPv4 address to the DC01 network adapter and disable IPv6
+
+![Set DC Static IP](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/set%20DC%20static%20ip.png)
+
 ### Enable Advanced Feature in Active Directory Users
+
+![AD advanced features](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/AD%20advanced%20features.png)
 
 Use this script to create fake users:
 
@@ -177,6 +156,11 @@ Use this script to create fake users:
   #the end
 ```
 
+Result
+
+![AD OUs](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/AD%20OUs.png)
+
+
 ### Edit group policy
 
 Run ```bash gpmc.msc``` from the Run or PowerShell
@@ -198,13 +182,20 @@ Right-click Default Domain Policy → Click Edit
            Password Policy 
 
            Account Lockout policy
- 
+		   
+![Password Policy](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/GP%20password%20policy.png)
+
+![Account Lockout Policy](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/GP%20account%20lockout%20policy.png)
 
 ### Join a client computer to the domain:
 
-Set the DNS to be the DC01 IP address (i.e. 10.0.0.2) > join the domain Homelab
+First make sure client can find the domain: Set the DNS to be the DC01 IP address (i.e. 10.0.0.2) > join the domain Homelab
+
+![Join a client to DC](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/join%20client%20to%20DC.png)
  
-Login as Homelab\John.doe 
+Login as ```Homelab\John.doe``` on the joined client
+
+![login as John](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/login%20as%20John.png)
 
 With the domain credential
  
@@ -213,6 +204,8 @@ Verify the applied group policy
 ```bash
 gpresult /r
 ```
+
+![gp result](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/GP%20result.png)
 
 ## Wazuh:
 
@@ -278,6 +271,9 @@ hydra -t 1 -V -l john.doe -P mini-rdp.txt rdp://10.0.0.2
 - -t 1 = 1 thread to avoid lockout burst
 - -V = verbose (see each attempt)
 - -P = wordlist (does NOT contain the real password)
+
+![kali hydra attack](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/kali%20hydra%20attack.png)
+
  
 # Confirm detection: Go to your Wazuh dashboard → Security Events
 
@@ -292,6 +288,7 @@ DQL:
 ```bash
  data.win.system.eventID:4625
 ```
+![wazuh 4625](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/wazuh%20event%204625.png)
 
 Search for Account Lockouts (Event ID 4740)
 
@@ -309,10 +306,15 @@ DQL:
  data.win.system.eventID:4624
 ```
 
+![wazuh 4624](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/wazuh%20event%204624.png)
+
+
 Wazuh ui > Management > Administration > Rules
 
 - 18107 → Windows failed login (Event ID 4625)
 - 1002 → Linux authentication failed
+
+![wazuh rules](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/wazuh%20rules.png)
 
 # Add a notification to the Discord channel:
 
@@ -396,6 +398,8 @@ Then add the <active-response> block:
    <rules_id>60204</rules_id> <!-- Brute-force rule -->
  </active-response>
 ```
+
+![ossec conf](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/ossec%20config.png)
  
 Restart Wazuh Manager
 
@@ -404,3 +408,8 @@ Restart Wazuh Manager
 ```
 
 ### Test by running the brute force step again 
+
+Discord message example:
+
+![discrod message example](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/discord%20message%20example.png)
+
