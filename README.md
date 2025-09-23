@@ -97,7 +97,7 @@ Rename the server to DC01
 
 Manage > Add roles and features > Active Directory and Domain Services
 
-![Alt text](/blob/main/Screenshots/promote%20to%20DC-1.png?raw=true "Promote to DC-1")
+![Promote to DC-1](https://github.com/AtypicalSysAdmin/SOC-Home-Lab-Attack-Defense-Simulation/blob/main/Screenshots/promote%20to%20DC-1.png)
  
 Click on Promote > Add a new forest > root domain: homelab.local
 
