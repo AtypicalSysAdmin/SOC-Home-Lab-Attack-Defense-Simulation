@@ -96,6 +96,8 @@ Rename the server to DC01
 ### Promote to Domain Controller
 
 Manage > Add roles and features > Active Directory and Domain Services
+
+![Alt text](/blob/main/Screenshots/promote%20to%20DC-1.png?raw=true "Promote to DC-1")
  
 Click on Promote > Add a new forest > root domain: homelab.local
 
